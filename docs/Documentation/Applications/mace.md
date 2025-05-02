@@ -6,17 +6,36 @@ The Multi Atomic Cluster Expansion (MACE) is a neural network-based approach for
 
 ## Installing MACE standalone package
 
-The Kestrel-optimized MACE conda environment can be found at: `/nopt/nrel/apps/gpu_stack/MACE/environments`
+The Kestrel-optimized MACE conda environment can be found at: `/nopt/nrel/apps/gpu_stack/software/mace/environments`
 
 Copy the `mace_kestrel.yml` to one of your own directories, and build the environment as from that directory as follows:
 
-`conda create -n <your_mace_env_name> -f mace_kestrel.yml`
+`$ module load conda`
 
-`conda env create --file mace_kestrel.yml`
+`$ conda env create -n <your_mace_env_name> -f mace_kestrel.yml`
 
-Then install MACE within the conda environment: 
+Then check that MACE is installed within the conda environment: 
 
-`python -m pip install -e mace`
+`$ conda list mace`
+
+Should show:
+# Name                    Version                   Build  Channel
+mace-torch                0.3.5                    pypi_0    pypi
+
+And that it's working: 
+
+`$ python`
+`>>> import torch`
+`>>> x = torch.rand(5, 3)`
+`>>> print(x)`
+`>>> exit`
+
+Should show the following after the print statement:
+tensor([[0.1828, 0.4496, 0.8743],
+        [0.9411, 0.3940, 0.1104],
+        [0.9148, 0.7720, 0.7389],
+        [0.6979, 0.0421, 0.1763],
+        [0.6563, 0.7603, 0.8917]])
 
 This environment is required for all commands in the MACE standalone package, including  those for training (`mace_run_train`), evaluation (`mace_eval_configs`) and creating lammps models (`mace_create_lammps_model`). 
 
