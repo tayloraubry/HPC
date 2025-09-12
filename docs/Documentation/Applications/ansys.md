@@ -30,6 +30,24 @@ vglrun runwb2
 
 where `<version>` will be replaced with an Ansys version/release e.g., `2025R1`. Press `tab` to auto-suggest all available versions. If no version is specified, it will load the default version which is 2025R1 at this moment. Because FastX desktop sessions are supported from DAV nodes shared between multiple HPC users, limits are placed on how much memory and compute resources can be consumed by a single user/job. For this reason, it is recommended that the GUI be primarily used to define the problem and run small-scale tests to validate its operation before moving the model to a compute node for larger-scale runs.
 
+For jobs that require both large-scale compute resources and GUI interactivity simultaneously, there is partial support for running the GUI from an X-enabled shell on a compute node.
+
+To do so, you can follow the following steps:
+
+1. Submit your interactive job and wait to obtain a node. For example:
+   ```
+   $ salloc -A <projectname> -t 02:00:00 --nodes=1 --ntasks-per-node=20
+   ```
+2. Once the requested node is allocated, take note of the node name.
+3. Open a secondary terminal on the FastX desktop, and `ssh -X <nodename>` to connect to the job node with X-forwarding enabled.
+   ```
+   [user@kd1 ~]$ ssh -X x1000c0s0b1n0
+   ```
+4. Launch Workbench in the new terminal
+   ```
+   [user@x1000c0s0b1n0 ~]$ module load ansys
+   [user@x1000c0s0b1n0 ~]$ runwb2
+
 ## Running Ansys Model in Parallel Batch Mode
 
 ### Ansys Fluent
