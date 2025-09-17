@@ -45,6 +45,9 @@ NREL offers modules for VASP 5 and VASP 6 on CPUs as well as GPUs on certain sys
 
 ## VASP on Kestrel
 
+??? note "Performance Note" 
+    As part of the Computational Sciences Tutorial Series, NREL's Computational Sciences Center hosted "Fast and Efficient VASP: Accelerating and Optimizing    Workflows on CPUs and GPUs." The tutorial provides performance recommendations for Kestrel, including guidance on when it is more efficient to run calculations on GPUs (for example, hybrid calculations or larger GGA calculations with more than ~200 atoms). Please see this link to access [a copy of our presentation](https://nrel.sharepoint.com/:b:/r/sites/ComputationalSciencesTutorials/Shared%20Documents/HPC%20User%20Community/Slides/6%20-%20Applications%20of%20HPC/Fast,%20Efficient%20VASP%20-%20Accelerating%20and%20Optimizing%20Workflows%20on%20GPUs%20and%20CPUs.pdf?csf=1&web=1&e=69hKjB).
+
 ### Running Using Modules
 
 #### CPU
@@ -53,9 +56,10 @@ There are several modules for CPU builds of VASP 5 and VASP 6.
 
 ```
 CPU $ module avail vasp
-------------- /nopt/nrel/apps/cpu_stack/modules/default/application -------------
-   vasp/5.4.4+tpc    vasp/6.3.2_openMP+tpc    vasp/6.4.2_openMP+tpc
-   vasp/5.4.4        vasp/6.3.2_openMP        vasp/6.4.2_openMP     (D)
+---------------- /nopt/nrel/apps/cpu_stack/modules/default/application -----------------
+   vasp/5.4.4+tpc           vasp/6.3.2_openMP        vasp/6.5.1_openMP+tpc
+   vasp/5.4.4               vasp/6.4.2_openMP+tpc    vasp/6.5.1_openMP     (D)
+   vasp/6.3.2_openMP+tpc    vasp/6.4.2_openMP
 ```
 
  Notes:
@@ -83,6 +87,13 @@ CPU $ module avail vasp
     #SBATCH --job-name=<your-job-name>
 
     module load vasp/<version with openMP>
+
+    # Recommended settings to improve stability of OpenMP runs
+    export OMP_NUM_THREADS=8    # Match this to the number of OpenMP threads (cpus-per-task above)
+    export OMP_PROC_BIND=spread
+    export OMP_PLACES=cores
+    export OMP_STACKSIZE=1G
+    ulimit -s unlimited
 
     srun vasp_std &> out
     ```
@@ -145,8 +156,9 @@ There are several modules for GPU builds of VASP 5 and VASP 6:
 ```
 GPU $ module avail vasp
 
------------- /nopt/nrel/apps/gpu_stack/modules/default/application -------------
-   vasp/6.3.2_openMP    vasp/6.3.2    vasp/6.4.2_openMP    vasp/6.4.2 (D)
+---------------- /nopt/nrel/apps/gpu_stack/modules/default/application -----------------
+   vasp/6.3.2_openMP    vasp/6.4.2_openMP    vasp/6.5.1_openMP+tpc
+   vasp/6.3.2           vasp/6.4.2           vasp/6.5.1_openMP     (D)
 
 ```
 
@@ -163,8 +175,9 @@ GPU $ module avail vasp
     #SBATCH --job-name=<your-job-name>
     #SBATCH --mem=0 #The GPU partition is shared :. you must specify memory needed even when requesting all the GPU resources
 
-    export MPICH_GPU_SUPPORT_ENABLED=1
+    #NOTE: THIS MUST BE SUBMITTED FROM A GPU LOG IN NODE
 
+    export MPICH_GPU_SUPPORT_ENABLED=1
     module load vasp/<version>
 
     srun vasp_std &> out
@@ -186,8 +199,9 @@ GPU nodes can be shared so you may request fewer than all 4 GPUs on a node. When
     #SBATCH --time=02:00:00
     #SBATCH --job-name=<your-job-name>
 
-    export MPICH_GPU_SUPPORT_ENABLED=1
+    #NOTE: THIS MUST BE SUBMITTED FROM A GPU LOG IN NODE
 
+    export MPICH_GPU_SUPPORT_ENABLED=1
     module load vasp/<version>
 
     srun vasp_std &> out
