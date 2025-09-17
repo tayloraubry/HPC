@@ -175,7 +175,7 @@ GPU $ module avail vasp
     #SBATCH --job-name=<your-job-name>
     #SBATCH --mem=0 #The GPU partition is shared :. you must specify memory needed even when requesting all the GPU resources
 
-    #NOTE: THIS MUST BE SUBMITTED FROM A GPU LOG IN NODE
+    #NOTE: THIS MUST BE SUBMITTED FROM A GPU LOGIN NODE
 
     export MPICH_GPU_SUPPORT_ENABLED=1
     module load vasp/<version>
