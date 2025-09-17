@@ -199,7 +199,7 @@ GPU nodes can be shared so you may request fewer than all 4 GPUs on a node. When
     #SBATCH --time=02:00:00
     #SBATCH --job-name=<your-job-name>
 
-    #NOTE: THIS MUST BE SUBMITTED FROM A GPU LOG IN NODE
+    #NOTE: THIS MUST BE SUBMITTED FROM A GPU LOGIN NODE
 
     export MPICH_GPU_SUPPORT_ENABLED=1
     module load vasp/<version>
